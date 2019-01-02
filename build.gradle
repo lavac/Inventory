@@ -46,7 +46,13 @@ dependencies {
 	compile('com.fasterxml.jackson.module:jackson-module-kotlin')
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	compile("org.jetbrains.kotlin:kotlin-reflect")
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile("org.hibernate.validator:hibernate-validator")
+	compile("org.apache.tomcat.embed:tomcat-embed-el")
+	testCompile('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'junit'
+	}
 	testCompile('io.projectreactor:reactor-test')
+	testImplementation('org.junit.jupiter:junit-jupiter-api:5.2.0')
+	testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.2.0')
 	testCompile('com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC1')
 }

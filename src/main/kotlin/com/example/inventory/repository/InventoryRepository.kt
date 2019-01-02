@@ -1,6 +1,7 @@
-package com.example.toBackEnd.repository
+package com.example.inventory.repository
 
-import com.example.toBackEnd.dto.Item
+import com.example.inventory.dto.Item
+import com.example.inventory.error.RepositoryException
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import reactor.core.publisher.Flux
@@ -20,20 +21,16 @@ class TodoRepository(val repository: Repository) {
         return repository.findById(id)
     }
 
-    fun update(id: Long, task1: String): Mono<Item> {
-        return get(id).map {
-            it.task = task1
-            repository.save(it)
-            Item(id, task1)
-        }
-
-    }
-
     fun delete(id: Long): Mono<Void> {
         return repository.deleteById(id)
     }
 
     fun getItems(): Flux<Item> {
-        return repository.findAll()
+        return try {
+         repository.findAll().doOnError({ t -> throw RepositoryException(t)})
+        } catch (e : Exception) {
+            throw RepositoryException(e)
+        }
     }
+
 }
